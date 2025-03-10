@@ -1,0 +1,10 @@
+@for (t of tasks$ | async; track t.id) {
+    <div class="three-col">
+        <code>{{t.id}}</code>
+        <span>{{t.name}}</span>
+        <span>{{t.priority}}</span>
+    </div>
+} 
+@empty {
+    <h2>You have no tasks</h2>
+}
