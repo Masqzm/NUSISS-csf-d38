@@ -1,6 +1,6 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { TaskStore } from '../task.store';
-import { Observable } from 'rxjs';
+import { filter, Observable, tap } from 'rxjs';
 import { Task } from '../models';
 
 @Component({
@@ -15,6 +15,20 @@ export class ListTasksComponent implements OnInit {
   protected tasks$!: Observable<Task[]>
 
   ngOnInit(): void {
-    this.tasks$ = this.taskStore.getTasks
+    this.tasks$ = this.taskStore.getTasks$('all')
+  }
+
+  deleteTask(taskId: string) {
+    this.taskStore.delTask(taskId)
+  }
+
+  filterTasks($event: any) {
+    const priority = $event.target.value
+    console.log('>>> priority:', priority)
+    
+    //this.taskStore.updatePriorityView(priority)
+
+    // Higher Order Fn. mtd
+    this.tasks$ = this.taskStore.getTasks$(priority)
   }
 }

@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { ComponentStore } from "@ngrx/component-store";
 import { Task, TaskSlice } from "./models";
 import { v4 as uuidv4 } from 'uuid'
+import { audit } from "rxjs";
 
 const INIT: TaskSlice = {
     tasks: [],
@@ -30,7 +31,8 @@ export class TaskStore extends ComponentStore<TaskSlice> {
 
             return {
                 tasks: [...slice.tasks, toSave],
-                audit: [...slice.audit, `Added new task on ${new Date()}`]
+                audit: [...slice.audit, `Added new task on ${new Date()}`],
+                priorityFilter: slice.priorityFilter
             } as TaskSlice
         }
     )
@@ -46,7 +48,8 @@ export class TaskStore extends ComponentStore<TaskSlice> {
             
             return {
                 tasks: [...slice.tasks, ...toSave],
-                audit: [...slice.audit, `Added ${toSave.length} tasks on ${new Date()}`]
+                audit: [...slice.audit, `Added ${toSave.length} tasks on ${new Date()}`],
+                priorityFilter: slice.priorityFilter
             } as TaskSlice
         }
     )
@@ -55,21 +58,33 @@ export class TaskStore extends ComponentStore<TaskSlice> {
         (slice: TaskSlice, taskId: string) => {            
             return {
                 tasks: slice.tasks.filter(t => t.id != taskId),
-                audit: [...slice.audit, `Deleted task on ${new Date()}`]
+                audit: [...slice.audit, `Deleted task on ${new Date()}`],
+                priorityFilter: slice.priorityFilter
             } as TaskSlice
         }
     )
 
+    readonly updatePriorityView = this.updater<string>(
+        (slice: TaskSlice, priority: string) => {
+            return {
+                tasks: [...slice.tasks],
+                audit: [...slice.audit],
+                priorityFilter: priority
+            }
+        }
+    )
+
     // Selectors (query)
-    readonly getTasks$ = (priority: string) => {
-        return this.select<Task[]>(
-            (slice: TaskSlice) => slice.tasks.filter(
-                task => (priority == 'all') || (task.priority == priority)
-            )
+    readonly getTasks$ = this.select<Task[]>(
+        (slice: TaskSlice) => slice.tasks.filter( 
+            // get task only if it filter set to all or if a task filter matches
+            t => (slice.priorityFilter == 'all') || (slice.priorityFilter == t.priority)
         )
-    }
+    )
     
     readonly getTasksCount$ = this.select<number>(
-        (slice: TaskSlice) => slice.tasks.length
+        (slice: TaskSlice) => slice.tasks.filter(
+            t => (slice.priorityFilter == 'all') || (slice.priorityFilter == t.priority)
+        ).length
     )
 }

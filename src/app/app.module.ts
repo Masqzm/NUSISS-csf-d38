@@ -4,13 +4,16 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { TaskComponent } from './components/task.component';
 import { TaskStore } from './task.store';
+//import { TaskStore } from './task.store.nonhof';
 import { ListTasksComponent } from './components/list-tasks.component';
+import { TaskCountComponent } from './components/task-count.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     TaskComponent,
-    ListTasksComponent
+    ListTasksComponent,
+    TaskCountComponent
   ],
   imports: [
     BrowserModule, ReactiveFormsModule
