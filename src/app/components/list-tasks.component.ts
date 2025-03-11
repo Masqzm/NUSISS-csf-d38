@@ -19,7 +19,8 @@ export class ListTasksComponent implements OnInit {
   }
 
   deleteTask(taskId: string) {
-    this.taskStore.delTask(taskId)
+    //this.taskStore.delTask(taskId)
+    this.taskStore.removeTask(taskId)
   }
 
   filterTasks($event: any) {

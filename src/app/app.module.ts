@@ -7,6 +7,7 @@ import { TaskStore } from './task.store';
 //import { TaskStore } from './task.store.nonhof';
 import { ListTasksComponent } from './components/list-tasks.component';
 import { TaskCountComponent } from './components/task-count.component';
+import { TaskRepository } from './task.repository';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,7 @@ import { TaskCountComponent } from './components/task-count.component';
   imports: [
     BrowserModule, ReactiveFormsModule
   ],
-  providers: [ TaskStore ],
+  providers: [ TaskStore, TaskRepository ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

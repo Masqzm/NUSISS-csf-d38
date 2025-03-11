@@ -27,7 +27,8 @@ export class TaskComponent implements OnInit {
     }
     console.info('>>> task: ', task)
 
-    this.taskStore.addTask(task)
+    //this.taskStore.addTask(task)
+    this.taskStore.saveTask(task)   // save task to indexedDB & store
 
     // Reset form
     this.form = this.createForm()
